@@ -1,0 +1,27 @@
+#!/bin/bash
+
+echo "" > vii.out.temp
+echo "" > vii.out.temp2
+echo "" > vii.out
+
+for pid in $(ps -ef | awk '{print $2}')
+do
+if [ -f /proc/$pid/io ]
+then
+readBytes=$(grep read_bytes /proc/$pid/io | grep -o "[0-9]\+")
+echo $pid : $readBytes >> vii.out.temp
+fi
+done
+
+sleep 1m
+
+for pid in $(awk '{print $1}' vii.out.temp)
+do
+readBytes=$(grep "^$pid " vii.out.temp | awk '{print $3}')
+readBytes2=$(grep read_bytes /proc/$pid/io | grep -o "[0-9]\+")
+echo $pid : $(($readBytes2 - $readBytes)) : $(cat /proc/$pid/comm) >> vii.out.temp2
+
+done
+
+sort -r -t ':' -n -k2 vii.out.temp2 > vii.out
+cat vii.out | head -n 3

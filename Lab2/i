@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ps U user | wc -l > i.out
+ps U user | awk '{print $1 " : " $5}' >> i.out

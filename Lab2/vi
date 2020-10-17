@@ -1,0 +1,27 @@
+#!/bin/bash
+
+for pid in $(ps -ef | awk '{print $2}')
+do
+if [ -f /proc/$pid/smaps ]
+then
+
+rss=$(awk 'BEGIN {i=0} /^Rss/ {i = i + $2} END {print i}' /proc/$pid/smaps)
+#pss=$(awk 'BEGIN {i=0} /^Pss/ {i = i + $2} END {print i}' /proc/$pid/smaps)
+sc=$(awk 'BEGIN {i=0} /^Shared_Clean/ {i = i + $2} END {print i}' /proc/$pid/smaps)
+sd=$(awk 'BEGIN {i=0} /^Shared_Dirty/ {i = i + $2} END {print i}' /proc/$pid/smaps)
+pc=$(awk 'BEGIN {i=0} /^Private_Clean/ {i = i + $2} END {print i}' /proc/$pid/smaps)
+pd=$(awk 'BEGIN {i=0} /^Private_Dirty/ {i = i + $2} END {print i}' /proc/$pid/smaps)
+
+echo $pid " : " $((rss)) " : " $((sc + sd + pc + pd))
+
+fi
+done > vi.out.temp
+
+sort -t ':' -n -k2 -r vi.out.temp > vi.out
+cat vi.out | head -n 1
+
+# Rss (Resident Share Size) = The amount of the mapping that is currently resident in RAM
+# Shared_Clean + Shared_Dirty = The shared part of RSS
+# Private_Clean + Private_Dirty = The private part of RSS
+# The total of Rss in /proc/[pid]/smaps = RES in top (from Resident)
+# Private_Clean + Private_Dirty = PSS (Proportional share size)

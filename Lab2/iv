@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "" > iv.out.temp
+for pid in $(ps -A -o pid | tail -n +2)
+do
+ParentPID=$(grep -Ehsi PPid /proc/$pid/status | grep -o "[0-9]\+")
+sumexec=$(grep -Ehsi sum_exec_runtime /proc/$pid/sched | grep -o "[0-9]\+" | head -1)
+nrsw=$(grep -Ehsi "nr_switches" /proc/$pid/sched | grep -o "[0-9]\+")
+
+if [[ $ParentPID != "" ]]
+then
+ART=$((sumexec / nrsw))
+echo $pid " : " $ParentPID " : " $ART >> iv.out.temp
+fi
+done
+sort -t ':' -n -k2 iv.out.temp > iv.out

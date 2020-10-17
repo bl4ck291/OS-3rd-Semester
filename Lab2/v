@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo "" > v.out
+previous=-1
+sum=0
+count=0
+
+while IFS=: read -r pid ppid art
+do
+if [[ $previous != -1 && $ppid != $previous ]]
+then
+echo Average_Sleeping_Children_of_ParentID=$previous is $((sum / count)) >> v.out
+sum=0
+count=0
+fi
+echo $pid " : " $ppid " : " $art >> v.out
+sum=$((sum + art))
+previous=$ppid
+((count++))
+done < iv.out
+
+echo Average_Sleeping_Children_of_ParentID=$previous is $((sum / count)) >> v.out
