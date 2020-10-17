@@ -23,5 +23,5 @@ cat vi.out | head -n 1
 # Rss (Resident Share Size) = The amount of the mapping that is currently resident in RAM
 # Shared_Clean + Shared_Dirty = The shared part of RSS
 # Private_Clean + Private_Dirty = The private part of RSS
-# The total of Rss in /proc/[pid]/smaps = RES in top (from Resident)
 # Private_Clean + Private_Dirty = PSS (Proportional share size)
+# The total of Rss in /proc/[pid]/smaps is approximately = RES in top (RES from Resident)
