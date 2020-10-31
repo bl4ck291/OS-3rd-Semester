@@ -1,0 +1,9 @@
+#!/bin/bash
+
+./iv.pro & echo "first=$!" > iv.pro.temp
+./iv.pro & echo "second=$!" >> iv.pro.temp
+./iv.pro & echo "third=$!" >> iv.pro.temp
+
+cat iv.pro.temp
+
+# $! contains the process ID of the most recently executed background process.

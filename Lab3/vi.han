@@ -1,0 +1,42 @@
+#!/bin/bash
+
+echo $$ > .pid
+
+V=1
+
+
+Addition()
+{
+	MODE="Addition"
+}
+
+Multiplication()
+{
+	MODE="Multiplication"
+}
+
+Termination()
+{
+	MODE="Termination"
+}
+
+trap 'Addition' USR1
+trap 'Multiplication' USR2
+trap 'Termination' SIGTERM
+while true; do
+	case $MODE in
+		"Addition")
+			let V=$V+2
+			echo "Addition result = $V"
+			;;
+		"Multiplication")
+			let V=$V*2
+			echo "Multiplication result = $V"
+			;;
+		"Termination")
+			echo "Terminating the process by SIGTERM signal from another process"
+			exit
+			;;
+	esac
+	sleep 1
+done

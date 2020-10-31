@@ -1,0 +1,9 @@
+#!/bin/bash
+
+firstpid=$(grep first= iv.pro.temp | grep -o [0-9]*)
+thirdpid=$(grep third= iv.pro.temp | grep -o [0-9]*)
+
+renice 10 $firstpid
+
+kill 15 $thirdpid
+

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+DateTime=$(date +%Y.%m.%d_%T)
+
+mkdir ~/test && echo "Catalog test was created successfully" > ~/report && touch ~/test/$DateTime.tmp
+
+ping -c 5 www.net_nikogo.ru || echo "$DateTime Couldn't run the ping command!" >> ~/report

@@ -1,0 +1,43 @@
+#!/bin/bash
+
+V=1
+MODE="Addition"
+
+(tail -f pipe) |
+while true; do
+	read LINE;
+	case $LINE in
+		QUIT)
+			echo "Terminated"
+			killall tail
+			kill 15 $(cat .pid)
+			exit
+			;;
+		+)
+			MODE="Addition"
+			echo $MODE
+			;;
+		\*)
+			MODE="Multiplication"
+			echo $MODE
+			;;
+		[0-9]*)
+			case $MODE in
+				"Addition")
+					let V=$V+$LINE
+					echo "Addition result = $V"
+					;;
+				"Multiplication")
+					let V=$V\*$LINE
+					echo "Multiplication result = $V"
+					;;
+			esac
+			;;
+		*)
+			echo "Exited with error: wrong values entered!"
+			killall tail
+			kill 15 $(cat .pid)
+			exit
+			;;
+	esac
+done

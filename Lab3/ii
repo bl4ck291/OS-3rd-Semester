@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#(sleep 2m && ./i) &
+# This works
+
+at now + 2 minutes -f i
+
+
+tail -n 0 -f ~/report
