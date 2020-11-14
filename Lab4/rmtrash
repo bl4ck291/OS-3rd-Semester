@@ -1,0 +1,17 @@
+#!/bin/bash
+
+File="$*"
+
+[ $# == 0 ] && echo "No arguments entered!" && exit
+
+[ ! -f "$File" ] && echo "The file doesn't exist or the argument is not a file!" && exit
+
+[ ! -d ~/.trash ] && mkdir ~/.trash
+
+NewLinkName="$File".$$
+
+ln "$File" ~/.trash/"$NewLinkName"
+
+rm "$File"
+
+echo "$(date +%Y.%m.%d_%T) : Deleted file : $(readlink -f "$File") : New hard link name in ~/.trash : $NewLinkName" >> ~/.trash.log

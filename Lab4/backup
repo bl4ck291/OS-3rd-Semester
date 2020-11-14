@@ -1,0 +1,53 @@
+#!/bin/bash
+
+Today=$(date +%Y-%m-%d) #Todays Date
+IToday=$(date +%Y%m%d) #Integer value of Todays Date
+LBD=$(ls /home/user | grep "Backup" | sort -n | tail -1 | awk -F "." '{print $2}') #Latest Backup Date
+if [[ $LBD == "" ]]
+then
+	mkdir /home/user/Backup.$Today
+	cp -R -a /home/user/source/. /home/user/Backup.$Today/
+	echo "No backup directory exists, created one at $Today and appended to it:" >> /home/user/backup-report
+	for i in $(ls /home/user/source/)
+	do
+		echo "Added new file: $i" >> /home/user/backup-report
+	done
+else
+	ILBF=$(date -d $LBD +%Y%m%d) #Integer value of Latest Backup File
+	Age=$(($IToday - $ILBF)) #Their Difference
+	if [[ $Age -ge 7 ]]
+	then
+		mkdir /home/user/Backup.$(date +%Y-%m-%d)
+		cp -R -a /home/user/source/. /home/user/Backup.$Today/
+        	echo "An old backup directory exists, created one at $Today and appended to it:" >> /home/user/backup-report
+        	for i in $(ls /home/user/source/)
+		do
+                	echo "Added new file: $i" >> /home/user/backup-report
+		done
+	else
+		echo "A backup exists with an age less than a week, Backup.$LBD, updated it at $Today and appended to it:" >> /home/user/backup-report
+		echo > /home/user/backup-report-temp1
+		echo > /home/user/backup-report-temp2
+		for i in $(ls /home/user/source/)
+		do
+			if [[ ! -f /home/user/Backup.$LBD/$i ]]
+			then
+				cp -R -a /home/user/source/$i /home/user/Backup.$LBD/
+				echo "Added new file: $i" >> /home/user/backup-report-temp1
+			elif [[ -f /home/user/Backup.$LBD/$i ]]
+			then
+				srsSize=$(ls -l /home/user/source/ | grep "$i$" | awk -F " " '{print $5}')
+				destSize=$(ls -l /home/user/Backup.$LBD/ | grep "$i$" | awk -F " " '{print $5}')
+				if [[ $srsSize != $destSize ]]
+				then
+					cp -R -a /home/user/source/$i /home/user/Backup.$LBD/$i.$Today
+					echo "$i exists added new version $i.$Today" >> /home/user/backup-report-temp2
+				fi
+			fi
+		done
+		cat /home/user/backup-report-temp1 >> /home/user/backup-report
+		cat /home/user/backup-report-temp2 >> /home/user/backup-report
+	fi
+fi
+
+

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+[ $# == 0 ] && echo "No arguments entered!" && exit
+
+echo "Please select a file:"
+
+cat ~/.trash.log | grep $1
+
+read FileName;
+
+echo "Are you sure you want to restore this file? (y/n):"
+
+read command;
+case $command in
+	y)
+		FilePath=$(dirname $(cat ~/.trash.log | grep $FileName | awk -F " : " '{print $3}'))
+		if [[ -d $FilePath ]]
+		then
+			if [[ -f $FilePath/$1 ]]
+			then
+				echo "A file with the same name already exits, please enter a new name:"
+				read NewName;
+				ln ~/.trash/$FileName $FilePath/$NewName
+				rm ~/.trash/$FileName
+				echo "Restored the file to the original directory with a new name"
+			else
+				ln ~/.trash/$FileName $FilePath/$1
+				rm ~/.trash/$FileName
+				echo "Restored the file to the original directory"
+			fi
+		else
+			if [[ -f ~/$1 ]]
+			then
+				echo "Original directory not found, and a file with the same name already exists in the home directory, please enter a new name for the file:"
+				read NewName;
+				ln ~/.trash/$FileName ~/$NewName
+				rm ~/.trash/$FileName
+				echo "Restored the file to the home directory with a new name"
+			else
+				ln ~/.trash/$FileName ~/$1
+				rm ~/.trash/$FileName
+				echo "Restored the file to the home directory"
+			fi
+		fi
+		exit
+		;;
+	n)
+		echo "Exited"
+		exit
+		;;
+esac

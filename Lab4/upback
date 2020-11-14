@@ -1,0 +1,10 @@
+#!/bin/bash
+
+[ ! -d /home/user/restore/ ] && mkdir /home/user/restore
+
+LBF=$(ls /home/user/ | grep Backup. | sort -n | tail -1) # Latest Backup Directory
+
+for i in $(ls /home/user/$LBF/ | grep -vP ".[0-9]{4}.[0-9]{2}.[0-9]{2}")
+do
+	cp /home/user/$LBF/$i /home/user/restore/
+done
