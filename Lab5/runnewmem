@@ -1,0 +1,10 @@
+#!/bin/bash
+
+N=1780190
+K=30
+Counter=1
+while [ $Counter -le $K ]; do
+	./newmem.bash $N &
+	sleep 1s
+	Counter=$(($Counter + 1))
+done
