@@ -1,0 +1,6 @@
+2.1	net share temp=c:\Lab6 /grant:everyone,FULL
+2.2 	echo cmd /k copy c:\Windows\apppatch\sysmain.sdb \\DESKTOP-L6EJP2P\temp > copycmd.bat
+2.3	timeout /T 60 && copycmd.bat
+2.4	taskkill /IM xcopy.exe /F
+2.5	fc C:\Users\Harith\Downloads\1GB.bin C:\Lab6\1GB.bin
+2.6	copycmd.bat

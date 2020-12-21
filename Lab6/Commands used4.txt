@@ -1,0 +1,2 @@
+4.1	driverquery /NH > drivers.txt
+4.2	sort /R drivers.txt

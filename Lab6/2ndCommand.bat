@@ -1,0 +1,1 @@
+cmd /k fc serviceList.txt serviceList2.txt > difference.txt

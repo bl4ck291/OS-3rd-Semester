@@ -1,0 +1,1 @@
+cmd /k net stop "DNS Client" && net start > serviceList2.txt && 2ndCommand.bat && net start "DNS Client"

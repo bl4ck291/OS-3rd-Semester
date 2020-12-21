@@ -1,0 +1,5 @@
+1.1 	systeminfo > systeminfo.txt
+1.2 	md TEST
+	copy systeminfo.txt TEST
+1.3	copy * c:\Lab6\OneFile.txt	OR BETTER	type * > OneFile.txt
+1.4	for %f in (*.*) do if not [%f]==[OneFile.txt] del /q %f
